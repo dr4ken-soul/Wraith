@@ -10,6 +10,7 @@ Wraith is a private limit order engine for Uniswap V3 on Ethereum Sepolia. A tra
 - `keeper` contains the Node.js polling service that reads the public pool price and drives Nox evaluation
 - `web` contains the Next.js landing page, wallet-gated dashboard, and encrypted order form
 - `feedback.md` records the Nox development experience
+- `DEMO_AND_TEST_GUIDE.md` contains the live test checklist and no-voiceover recording plan
 
 There is no database or off-chain order index. The dashboard reads the vault directly and decrypts values only for the connected owner wallet.
 
