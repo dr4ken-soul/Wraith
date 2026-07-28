@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import {AnimatePresence, motion, useDragControls} from 'motion/react'
 import {useRef, useState} from 'react'
 import {useAccount, useDisconnect} from 'wagmi'
@@ -25,7 +26,10 @@ export function Nav() {
   return (
     <>
       <nav className="fixed inset-x-0 top-0 z-[var(--z-sticky)] flex items-start justify-between p-5 md:p-6 md:px-8" aria-label="Primary navigation">
-        <Link href="/" className="font-mono text-sm uppercase tracking-[0.3em] text-[var(--text-primary)]">WRAITH</Link>
+        <Link href="/" className="flex items-center gap-3 font-mono text-sm uppercase tracking-[0.3em] text-[var(--text-primary)]" aria-label="Wraith home">
+          <Image src="/wraith-mark.png" alt="" width={28} height={28} className="h-7 w-7 rounded-md object-cover" priority />
+          <span>WRAITH</span>
+        </Link>
         <button type="button" onClick={handleWalletClick} className="flex min-h-11 items-center gap-2 rounded-full border border-[var(--border-default)] bg-[var(--bg-surface)] px-4 py-2 font-mono text-xs text-[var(--text-primary)] transition-all duration-200 hover:border-[var(--accent)] hover:shadow-[var(--accent-shadow)] md:px-5 md:text-sm">
           {isConnected && <span className="h-1.5 w-1.5 rounded-full bg-[var(--success)]" aria-hidden="true" />}
           {isConnected ? shortAddress : 'CONNECT WALLET'}
