@@ -29,6 +29,13 @@ Do not go straight to recording. Run the automated checks first, then run the li
 
 When another unchecked item is completed, update this list and keep the transaction hash or deployment address beside your private notes. Do not put private keys in this file.
 
+### Evidence recorded so far
+
+- `npm run build`: passed. Hardhat printed a Solidity 0.8.35 support warning, then reported `Nothing to compile`; keeper TypeScript passed; Next.js compiled, type-checked, generated all 6 pages, and finalised the build.
+- `npm test`: passed with `2 passing` Hardhat tests.
+
+The Hardhat telemetry question is not a build failure. Answering `y` or `n` only changes Hardhat's local telemetry preference.
+
 ## 1. Accounts and test resources
 
 Prepare these before configuring the environment:
@@ -138,6 +145,23 @@ Never commit any of these environment files. Only `.env.example` belongs in Git.
 
 Never send either private key to anyone, including support or an AI assistant. Enter them directly into the local files on your computer.
 
+### Direct links you can use
+
+- Sepolia ETH faucet: <https://www.alchemy.com/faucets/ethereum-sepolia>
+- Alchemy dashboard for an RPC endpoint: <https://dashboard.alchemy.com/>
+- Sepolia block explorer: <https://sepolia.etherscan.io/>
+- Etherscan API-key page: <https://etherscan.io/apis>
+- WalletConnect dashboard: <https://dashboard.walletconnect.com/>
+- Official Uniswap deployment addresses: <https://developers.uniswap.org/docs/protocols/v3/deployments>
+
+There is no single correct token address or pool address for every demo. Those two values must belong to the same live Sepolia pool. Do not copy a mainnet address into a Sepolia environment. The official Uniswap page warns that deployment addresses differ between networks; verify the selected router and pool on Sepolia before using them.
+
+### Why the files are separate
+
+One root `.env` would not be routed automatically to all three tools. Hardhat and the keeper run as separate Node projects, while Next.js reads its own `web/.env.local` file and embeds every `NEXT_PUBLIC_` value into browser code. Putting the private deployer or keeper key into the web environment would expose it to the browser bundle.
+
+Vercel is different: its Environment Variables screen acts like the `web/.env.local` file. Add only the public `NEXT_PUBLIC_` variables to Vercel. Do not add the contract deployer or keeper secrets to Vercel.
+
 ## 4. Deploy and verify the vault
 
 Run the contract checks once more after configuring the environment:
@@ -224,6 +248,8 @@ Wraith has two separate runtime pieces:
 - `keeper` is a long-running blockchain polling process and should not run as a Vercel deployment.
 
 Vercel can host the landing page, wallet UI, dashboard, and order form. The keeper must run locally during the demo or on a worker host such as Railway, Render, Fly.io, or a small server. The keeper needs a persistent process because it uses `setInterval` to keep checking open orders.
+
+Could the keeper be changed into a Vercel Cron function? Technically, one polling cycle could be exposed as an HTTP function, but that would not provide the current 15-second keeper loop. Vercel Hobby cron jobs are limited to once per day, so they are not suitable for this live order demo. Keep the current keeper running locally for the recording; the Vercel frontend can still connect to the same deployed Sepolia vault.
 
 ### Deploy the frontend
 
