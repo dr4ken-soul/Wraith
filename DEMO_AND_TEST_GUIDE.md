@@ -21,6 +21,7 @@ Do not go straight to recording. Run the automated checks first, then run the li
 - [x] Run `npm test`.
 - [x] Create local environment-file templates with safe blank values.
 - [x] Add Vercel configuration for the frontend.
+- [x] Add a free GitHub Actions option for one keeper cycle every five minutes.
 - [ ] Fill the required environment values.
 - [ ] Deploy and verify `WraithVault` on Sepolia.
 - [ ] Approve the input token for the vault.
@@ -250,6 +251,31 @@ Wraith has two separate runtime pieces:
 Vercel can host the landing page, wallet UI, dashboard, and order form. The keeper must run locally during the demo or on a worker host such as Railway, Render, Fly.io, or a small server. The keeper needs a persistent process because it uses `setInterval` to keep checking open orders.
 
 Could the keeper be changed into a Vercel Cron function? Technically, one polling cycle could be exposed as an HTTP function, but that would not provide the current 15-second keeper loop. Vercel Hobby cron jobs are limited to once per day, so they are not suitable for this live order demo. Keep the current keeper running locally for the recording; the Vercel frontend can still connect to the same deployed Sepolia vault.
+
+### Free keeper option using GitHub Actions
+
+The repository now includes `.github/workflows/keeper.yml`. It runs one keeper cycle every five minutes and can also be started manually. This is suitable for a hackathon demo and avoids Railway. Standard GitHub-hosted runners are free for public repositories, and GitHub's shortest scheduled-workflow interval is five minutes.
+
+After the vault has been deployed, open the repository on GitHub and go to `Settings` -> `Secrets and variables` -> `Actions` -> `New repository secret`. Add these four secrets exactly:
+
+```text
+KEEPER_PRIVATE_KEY=<keeper wallet private key>
+KEEPER_RPC_URL=<Sepolia RPC URL>
+KEEPER_VAULT_ADDRESS=<deployed vault address>
+KEEPER_POOL_ADDRESS=<live pool address>
+```
+
+Do not add the private key as a normal repository variable. Use the encrypted `Secrets` section. GitHub documents that Actions secrets are encrypted and are only injected into a workflow when referenced by it: <https://docs.github.com/en/actions/concepts/security/secrets>.
+
+To test it manually:
+
+1. Open the repository on GitHub.
+2. Select `Actions`.
+3. Select `Wraith keeper cycle`.
+4. Select `Run workflow`.
+5. Open the new run and inspect its logs.
+
+The workflow runs only one cycle and exits. That is intentional. The scheduled workflow starts another cycle five minutes later. Keep the repository active because GitHub may disable scheduled workflows in a public repository after 60 days without activity. The GitHub Actions schedule and public-repository billing rules are documented at <https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax> and <https://docs.github.com/en/actions/concepts/billing-and-usage>.
 
 ### Deploy the frontend
 

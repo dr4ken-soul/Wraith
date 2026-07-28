@@ -37,6 +37,7 @@ async function main(): Promise<void> {
   const config = getKeeperConfig()
   console.log(`keeper polling every ${config.pollIntervalMs}ms`)
   await runCycle()
+  if (process.env.KEEPER_ONCE === 'true') return
   setInterval(() => {
     void runCycle().catch((error: unknown) => console.error('keeper cycle failed', error))
   }, config.pollIntervalMs)
