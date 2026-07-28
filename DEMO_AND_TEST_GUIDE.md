@@ -146,6 +146,23 @@ Never commit any of these environment files. Only `.env.example` belongs in Git.
 
 Never send either private key to anyone, including support or an AI assistant. Enter them directly into the local files on your computer.
 
+### Exact wallet-to-variable map
+
+Use two different wallets:
+
+| Wallet | Public address goes here | Private key goes here | Purpose |
+| --- | --- | --- | --- |
+| Wraith Deployer | Not required by the contract; keep its address for your notes | `contracts/.env` -> `DEPLOYER_PRIVATE_KEY` | Pays for deployment and verification-related transactions |
+| Wraith Keeper | `contracts/.env` -> `KEEPER_ADDRESS` and optionally `keeper/.env` -> `KEEPER_ADDRESS` | `keeper/.env` -> `KEEPER_PRIVATE_KEY` | The contract authorises this address to evaluate and execute orders |
+
+The `KEEPER_ADDRESS` line inside `contracts/.env` is correct. The deployment script reads it and writes that address permanently into the vault constructor. It is the keeper's public address, not the deployer's address and not the keeper's private key.
+
+The `KEEPER_ADDRESS` line inside `keeper/.env` is retained for clarity, but the keeper process authenticates from `KEEPER_PRIVATE_KEY`; the two values must belong to the same wallet.
+
+The trader wallet is the wallet connected in the browser. It is the wallet that owns the order, holds the input token, approves the vault, and receives the output token. It does not belong in either private-key field.
+
+A private key must be exactly `0x` followed by 64 hexadecimal characters. It must not contain a trailing full stop, spaces, quotation marks, or line breaks. If a private key was ever pasted into chat, committed, or exposed in a screenshot, create a new wallet and stop using the old key.
+
 ### Direct links you can use
 
 - Sepolia ETH faucet: <https://www.alchemy.com/faucets/ethereum-sepolia>
