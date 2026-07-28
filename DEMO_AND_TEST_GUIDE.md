@@ -25,7 +25,7 @@ Do not go straight to recording. Run the automated checks first, then run the li
 - [x] Select and configure a live Sepolia WETH/USDC Uniswap V3 pool.
 - [x] Fill the required environment values.
 - [x] Deploy and verify `WraithVault` on Sepolia.
-- [ ] Approve the input token for the vault.
+- [x] Approve the input token for the vault.
 - [ ] Pass one complete live order from encryption to `EXECUTED`.
 - [ ] Record the final demo.
 
@@ -38,6 +38,7 @@ When another unchecked item is completed, update this list and keep the transact
 - `WraithVault` deployed and verified on Sepolia at `0xD684421deCfd9d082D785e83a316B5CEff33AdAd`.
 - On-chain constructor reads match the configured keeper, router, and `3000` pool fee.
 - The frontend production build passes with `.env.local` containing the deployed vault and selected pool configuration.
+- Trader approval passed: Sepolia WETH approval transaction `0x46e75ca6cf1f11f2580b6b2087a177fa4f6f755d2e8e5f7965d3069663f04591` approved `0.001 WETH` for the Wraith vault.
 
 The Hardhat telemetry question is not a build failure. Answering `y` or `n` only changes Hardhat's local telemetry preference.
 
@@ -305,6 +306,8 @@ For an immediate trigger:
 - select `Price falls to` and enter a threshold slightly above the current value
 
 This demonstrates the complete confidential evaluation and execution flow without trying to move a public testnet market during the recording.
+
+At the time of the latest local check, the selected pool returned a raw keeper price of `45734918`, which corresponds to a form trigger value of approximately `45.734918`. Re-read `slot0()` immediately before submitting because testnet prices can change. For an immediate `Price rises to` trigger, use a slightly lower value such as `45.000000`; for an immediate `Price falls to` trigger, use a slightly higher value such as `46.000000`.
 
 ## 7. Deploy the frontend to Vercel
 
