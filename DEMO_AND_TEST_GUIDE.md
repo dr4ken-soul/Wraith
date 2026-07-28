@@ -23,8 +23,8 @@ Do not go straight to recording. Run the automated checks first, then run the li
 - [x] Add Vercel configuration for the frontend.
 - [x] Add a free GitHub Actions option for one keeper cycle every five minutes.
 - [x] Select and configure a live Sepolia WETH/USDC Uniswap V3 pool.
-- [ ] Fill the required environment values.
-- [ ] Deploy and verify `WraithVault` on Sepolia.
+- [x] Fill the required environment values.
+- [x] Deploy and verify `WraithVault` on Sepolia.
 - [ ] Approve the input token for the vault.
 - [ ] Pass one complete live order from encryption to `EXECUTED`.
 - [ ] Record the final demo.
@@ -35,6 +35,9 @@ When another unchecked item is completed, update this list and keep the transact
 
 - `npm run build`: passed. Hardhat printed a Solidity 0.8.35 support warning, then reported `Nothing to compile`; keeper TypeScript passed; Next.js compiled, type-checked, generated all 6 pages, and finalised the build.
 - `npm test`: passed with `2 passing` Hardhat tests.
+- `WraithVault` deployed and verified on Sepolia at `0xD684421deCfd9d082D785e83a316B5CEff33AdAd`.
+- On-chain constructor reads match the configured keeper, router, and `3000` pool fee.
+- The frontend production build passes with `.env.local` containing the deployed vault and selected pool configuration.
 
 The Hardhat telemetry question is not a build failure. Answering `y` or `n` only changes Hardhat's local telemetry preference.
 
@@ -126,6 +129,21 @@ NEXT_PUBLIC_DEMO_POOL_FEE=<same fee used by the vault>
 
 Set `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` if you want the wallet modal to offer WalletConnect QR connections. MetaMask or another injected Sepolia wallet also works for the recording.
 
+### Creating the WalletConnect project from the dashboard
+
+On the WalletConnect dashboard screen shown in the setup process:
+
+1. Leave `App` selected. Wraith is a dapp, not a wallet.
+2. Enter `Wraith` in the project name field and click `Add`.
+3. Open the new project and copy its `Project ID`.
+4. Put that value in `web/.env.local`:
+
+   ```text
+   NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=<your WalletConnect Project ID>
+   ```
+
+The project ID is not a wallet address, private key, RPC URL, Uniswap API key, or Etherscan API key. It is only for WalletConnect's browser connection modal. Add it to Vercel as a frontend environment variable too if the deployed site should offer WalletConnect QR connections. It does not belong in `contracts/.env` or `keeper/.env`. If you will connect MetaMask directly, this value can remain blank.
+
 Never commit any of these environment files. Only `.env.example` belongs in Git.
 
 ### Where each value comes from
@@ -194,7 +212,15 @@ Open these direct Sepolia pages if you need to inspect them:
 - [WETH/USDC 0.3% pool](https://sepolia.etherscan.io/address/0x6Ce0896eAE6D4BD668fDe41BB784548fb8F59b50)
 - [Uniswap V3 router](https://sepolia.etherscan.io/address/0x3bFA4769FB09eefC5a80d6E87c3B9C650f7Ae48E)
 
-The vault address is deliberately still blank. It will be printed only after the deployment command succeeds.
+Before deployment, the vault address was deliberately blank. The deployment has now supplied the address below.
+
+The vault is now deployed and verified at:
+
+```text
+0xD684421deCfd9d082D785e83a316B5CEff33AdAd
+```
+
+Explorer: <https://sepolia.etherscan.io/address/0xD684421deCfd9d082D785e83a316B5CEff33AdAd#code>
 
 ### Why the files are separate
 
