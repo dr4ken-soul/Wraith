@@ -68,6 +68,8 @@ npm --prefix web run build
 
 Open `/` for the landing page, `/app` for the wallet-gated dashboard, and `/app/orders/new` for a live encrypted order. The order form expects the pool price scale used by the vault and the keeper. The Sepolia network guard rejects other chains before a transaction is submitted.
 
+The frontend can be deployed to Vercel using the repository `vercel.json`. The keeper is a separate long-running process and should run locally or on a worker host, not as a Vercel serverless deployment. See `DEMO_AND_TEST_GUIDE.md` for the exact setup and recording sequence.
+
 ## Privacy boundary
 
 The token pair and trigger direction are intentionally public in this MVP. The trigger price and amount are encrypted client-side before `submitOrder`. The vault stores Nox encrypted values and ACLs, not plaintext. The only public decryption calls are the boolean evaluation result and the amount for the one order that has triggered.

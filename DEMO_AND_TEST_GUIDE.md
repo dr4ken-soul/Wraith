@@ -15,6 +15,20 @@ That is not the same as a completed live demo. Before recording, Wraith still ne
 
 Do not go straight to recording. Run the automated checks first, then run the live smoke test, then record only after the complete order lifecycle has succeeded.
 
+## Progress tracker
+
+- [x] Run `npm run build`.
+- [x] Run `npm test`.
+- [x] Create local environment-file templates with safe blank values.
+- [x] Add Vercel configuration for the frontend.
+- [ ] Fill the required environment values.
+- [ ] Deploy and verify `WraithVault` on Sepolia.
+- [ ] Approve the input token for the vault.
+- [ ] Pass one complete live order from encryption to `EXECUTED`.
+- [ ] Record the final demo.
+
+When another unchecked item is completed, update this list and keep the transaction hash or deployment address beside your private notes. Do not put private keys in this file.
+
 ## 1. Accounts and test resources
 
 Prepare these before configuring the environment:
@@ -64,6 +78,8 @@ Copy-Item .env.example keeper/.env
 Copy-Item .env.example web/.env.local
 ```
 
+The repository now contains local versions of these three files with the public Sepolia RPC pre-filled and secret/address values blank. They are ignored by Git and will not be pushed. You only need to fill the blank values; do not create a fourth kind of configuration file.
+
 Fill `contracts/.env` with:
 
 ```text
@@ -102,6 +118,25 @@ NEXT_PUBLIC_DEMO_POOL_FEE=<same fee used by the vault>
 Set `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` if you want the wallet modal to offer WalletConnect QR connections. MetaMask or another injected Sepolia wallet also works for the recording.
 
 Never commit any of these environment files. Only `.env.example` belongs in Git.
+
+### Where each value comes from
+
+| Variable | Where to get it |
+| --- | --- |
+| `DEPLOYER_PRIVATE_KEY` | The private key of the separate Sepolia deployer wallet, entered only in `contracts/.env` |
+| `KEEPER_PRIVATE_KEY` | The private key of the separate keeper wallet, entered only in `keeper/.env` |
+| `KEEPER_ADDRESS` | The public address of the keeper wallet |
+| `KEEPER_RPC_URL` and `NEXT_PUBLIC_RPC_URL` | Your Sepolia RPC provider URL |
+| `NEXT_PUBLIC_UNISWAP_SWAP_ROUTER_ADDRESS` | The verified Uniswap deployment address for the network, checked against the [official Uniswap deployment page](https://developers.uniswap.org/docs/protocols/v3/deployments) |
+| `UNISWAP_POOL_FEE` and `NEXT_PUBLIC_DEMO_POOL_FEE` | The fee tier of the exact pool being used, such as `3000` |
+| `KEEPER_POOL_ADDRESS` and `NEXT_PUBLIC_DEMO_POOL_ADDRESS` | The address of the exact live Uniswap V3 pool |
+| `NEXT_PUBLIC_DEMO_TOKEN_IN_ADDRESS` | The token contract being sold |
+| `NEXT_PUBLIC_DEMO_TOKEN_OUT_ADDRESS` | The token contract being received |
+| `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` | A project created at WalletConnect Cloud; it is optional when using an injected MetaMask wallet |
+| `ETHERSCAN_API_KEY` | An Etherscan API key, used only for contract verification |
+| `NEXT_PUBLIC_WRAITH_VAULT_ADDRESS` and `KEEPER_VAULT_ADDRESS` | The address printed by the Wraith deployment command |
+
+Never send either private key to anyone, including support or an AI assistant. Enter them directly into the local files on your computer.
 
 ## 4. Deploy and verify the vault
 
@@ -181,7 +216,66 @@ For an immediate trigger:
 
 This demonstrates the complete confidential evaluation and execution flow without trying to move a public testnet market during the recording.
 
-## 7. Run the live smoke test
+## 7. Deploy the frontend to Vercel
+
+Wraith has two separate runtime pieces:
+
+- `web` is the browser frontend and can run on Vercel.
+- `keeper` is a long-running blockchain polling process and should not run as a Vercel deployment.
+
+Vercel can host the landing page, wallet UI, dashboard, and order form. The keeper must run locally during the demo or on a worker host such as Railway, Render, Fly.io, or a small server. The keeper needs a persistent process because it uses `setInterval` to keep checking open orders.
+
+### Deploy the frontend
+
+The repository now includes `vercel.json`, so the root of this repository can be imported into Vercel. Alternatively, set the Vercel project Root Directory to `web` and use the normal Next.js defaults.
+
+Using the Vercel CLI:
+
+```powershell
+npx vercel login
+npx vercel
+```
+
+When prompted, create or select the Wraith project and accept the detected Next.js settings. For a production deployment:
+
+```powershell
+npx vercel --prod
+```
+
+In Vercel Project Settings, add these Environment Variables for the `Production` environment:
+
+```text
+NEXT_PUBLIC_CHAIN_ID
+NEXT_PUBLIC_RPC_URL
+NEXT_PUBLIC_WRAITH_VAULT_ADDRESS
+NEXT_PUBLIC_DEMO_TOKEN_IN_ADDRESS
+NEXT_PUBLIC_DEMO_TOKEN_OUT_ADDRESS
+NEXT_PUBLIC_DEMO_POOL_ADDRESS
+NEXT_PUBLIC_DEMO_POOL_FEE
+NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
+```
+
+Do not add `KEEPER_PRIVATE_KEY`, `DEPLOYER_PRIVATE_KEY`, or any other keeper secret to Vercel. Redeploy after changing environment variables. The Vercel URL is the hosted Wraith landing page.
+
+If `NEXT_PUBLIC_WRAITH_VAULT_ADDRESS` is empty, the landing page can still render, but the dashboard cannot read orders and the order form cannot submit. Deploy the vault first, then add its address and redeploy the frontend.
+
+### How to view the site locally
+
+You do not need the keeper just to see the landing page. Run this from the repository root:
+
+```powershell
+npm --prefix web run dev
+```
+
+Then open this exact address in your browser:
+
+```text
+http://localhost:3000
+```
+
+Keep that terminal open while using the site. Open `/app` or `/app/orders/new` by adding that path to the same address. Start the keeper separately only when testing a submitted order all the way to execution.
+
+## 8. Run the live smoke test
 
 Use two terminals from the repository root.
 
@@ -224,7 +318,7 @@ Open `http://localhost:3000` and switch the browser wallet to Sepolia.
 
 The test is a pass only if the actual output token arrives in the trader wallet. A successful order submission alone is not an end-to-end pass.
 
-## 8. What to verify before recording
+## 9. What to verify before recording
 
 Record the transaction hashes and keep them available for the submission notes.
 
@@ -254,7 +348,7 @@ Run these before the final take if time allows:
 
 Do not use an unapproved order as the final demo. A failed approval produces an execution failure rather than a clean product story.
 
-## 9. Recording plan with no voiceover, subtitles, or captions
+## 10. Recording plan with no voiceover, subtitles, or captions
 
 Record a clean screen capture only. Do not add narration, subtitles, captions, or explanatory overlays. Let the Wraith interface, wallet confirmation, explorer pages, keeper log, and status changes provide the evidence.
 
@@ -299,7 +393,7 @@ Return to the landing page and show the live filled-order or routed-volume metri
 - Keep the final recording continuous where possible so the lifecycle is credible.
 - If a transaction fails, stop recording, reset the test state, fix the cause, and retake the sequence.
 
-## 10. Submission handoff
+## 11. Submission handoff
 
 After the clean take:
 
