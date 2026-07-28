@@ -22,6 +22,7 @@ Do not go straight to recording. Run the automated checks first, then run the li
 - [x] Create local environment-file templates with safe blank values.
 - [x] Add Vercel configuration for the frontend.
 - [x] Add a free GitHub Actions option for one keeper cycle every five minutes.
+- [x] Select and configure a live Sepolia WETH/USDC Uniswap V3 pool.
 - [ ] Fill the required environment values.
 - [ ] Deploy and verify `WraithVault` on Sepolia.
 - [ ] Approve the input token for the vault.
@@ -173,6 +174,27 @@ A private key must be exactly `0x` followed by 64 hexadecimal characters. It mus
 - Official Uniswap deployment addresses: <https://developers.uniswap.org/docs/protocols/v3/deployments>
 
 There is no single correct token address or pool address for every demo. Those two values must belong to the same live Sepolia pool. Do not copy a mainnet address into a Sepolia environment. The official Uniswap page warns that deployment addresses differ between networks; verify the selected router and pool on Sepolia before using them.
+
+### Selected demo configuration
+
+To remove that choice for this build, the local env files now use this live Sepolia configuration:
+
+```text
+Token in:  WETH  0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14
+Token out: USDC  0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238
+Pool fee:  3000
+Pool:      0x6Ce0896eAE6D4BD668fDe41BB784548fb8F59b50
+Router:    0x3bFA4769FB09eefC5a80d6E87c3B9C650f7Ae48E
+```
+
+Open these direct Sepolia pages if you need to inspect them:
+
+- [WETH token](https://sepolia.etherscan.io/address/0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14)
+- [USDC token](https://sepolia.etherscan.io/address/0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238)
+- [WETH/USDC 0.3% pool](https://sepolia.etherscan.io/address/0x6Ce0896eAE6D4BD668fDe41BB784548fb8F59b50)
+- [Uniswap V3 router](https://sepolia.etherscan.io/address/0x3bFA4769FB09eefC5a80d6E87c3B9C650f7Ae48E)
+
+The vault address is deliberately still blank. It will be printed only after the deployment command succeeds.
 
 ### Why the files are separate
 
