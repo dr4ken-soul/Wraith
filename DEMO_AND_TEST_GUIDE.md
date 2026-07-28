@@ -347,7 +347,17 @@ The workflow runs only one cycle and exits. That is intentional. The scheduled w
 
 ### Deploy the frontend
 
-The repository now includes `vercel.json`, so the root of this repository can be imported into Vercel. Alternatively, set the Vercel project Root Directory to `web` and use the normal Next.js defaults.
+The frontend is a monorepo package under `web`, so set the Vercel project Root Directory to `web`. This makes Vercel detect the `web/package.json` file and the Next.js dependency correctly. Use these settings:
+
+```text
+Root Directory: web
+Framework Preset: Next.js
+Build Command: npm run build
+Install Command: npm ci
+Output Directory: leave the default/blank
+```
+
+The repository includes `web/vercel.json` to identify the package as a Next.js project. Do not use the repository root as the Vercel Root Directory for the dashboard import; the root contains the contracts and keeper packages as well as the frontend.
 
 Using the Vercel CLI:
 
@@ -362,7 +372,7 @@ When prompted, create or select the Wraith project and accept the detected Next.
 npx vercel --prod
 ```
 
-In Vercel Project Settings, add these Environment Variables for the `Production` environment:
+In Vercel Project Settings, add these Environment Variables for the `Production` and `Preview` environments:
 
 ```text
 NEXT_PUBLIC_CHAIN_ID
