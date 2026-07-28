@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Azeret+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #08090b;
+  --bg-secondary: #0d0f12;
+  --bg-surface: #131519;
+  --bg-elevated: #191c21;
+  --accent: #b8f0ff;
+  --accent-hover: #d4f7ff;
+  --accent-glow: rgba(184, 240, 255, 0.1);
+  --text-primary: #ececec;
+  --text-secondary: #8d9096;
+  --text-muted: #4a4d52;
+  --border-subtle: rgba(184, 240, 255, 0.05);
+  --border-default: rgba(184, 240, 255, 0.1);
+  --success: #7ee89a;
+  --error: #ff5c7a;
+  --button-text: #08090b;
+  --accent-shadow: 0 0 30px rgba(184, 240, 255, 0.14);
+  --glass-shadow: 0 0 40px rgba(184, 240, 255, 0.08);
+  --z-field: 0;
+  --z-grain: 3;
+  --z-content: 10;
+  --z-panel: 20;
+  --z-drawer: 40;
+  --z-scrim: 45;
+  --z-sticky: 50;
+  --z-modal-backdrop: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+  --font-display: 'Big Shoulders Display', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'Azeret Mono', monospace;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scrollbar-width: none; background: var(--bg-primary); }
+html::-webkit-scrollbar { display: none; }
+body { margin: 0; background: var(--bg-primary); color: var(--text-primary); font-family: var(--font-body); overflow-x: hidden; }
+button, a, input, select { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+h1, h2, h3 { text-wrap: balance; }
+p { text-wrap: pretty; }
+
+body::before { content: ''; position: fixed; inset: 0; z-index: var(--z-grain); pointer-events: none; opacity: 0.035; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E"); }
+
+@layer components {
+  .eyebrow { @apply font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--accent)]; }
+  .button-primary { @apply inline-flex min-h-11 items-center gap-3 rounded-full bg-[var(--accent)] px-6 py-3 font-mono text-sm font-medium tracking-wide text-[var(--button-text)] transition-all duration-200 hover:bg-[var(--accent-hover)] hover:shadow-[var(--accent-shadow)] disabled:cursor-not-allowed disabled:opacity-40; }
+  .button-secondary { @apply inline-flex min-h-11 items-center justify-center rounded-full border border-[var(--border-default)] px-6 py-3 font-mono text-sm text-[var(--text-primary)] transition-colors duration-200 hover:border-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-40; }
+  .button-icon { @apply flex h-7 w-7 items-center justify-center rounded-full transition-transform duration-200; background: color-mix(in srgb, var(--button-text) 10%, transparent); }
+  .icon-button { @apply inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border-default)] text-[var(--text-secondary)] transition-colors duration-200 hover:border-[var(--accent)] hover:text-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-40; }
+  .double-bezel { @apply rounded-[1.25rem] bg-[var(--accent-glow)] p-1 ring-1 ring-[var(--border-default)]; }
+  .double-bezel-core { @apply rounded-[1rem] border border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[inset_0_1px_1px_rgba(255,255,255,0.08)]; }
+  .glass-panel { @apply border border-[var(--border-default)] bg-[rgba(19,21,25,0.7)] shadow-[var(--glass-shadow)]; -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); }
+  .skeleton { @apply animate-pulse rounded-lg bg-[var(--bg-elevated)]; }
+  .field-label { @apply mb-2 block font-mono text-[11px] uppercase tracking-[0.15em] text-[var(--text-muted)]; }
+  .field-input { @apply w-full rounded-lg border border-[var(--border-default)] bg-[var(--bg-secondary)] px-4 py-3 font-mono text-sm text-[var(--text-primary)] transition-colors duration-200 placeholder:text-[var(--text-muted)] focus:border-[var(--accent)] focus:outline-none; }
+}
+
+.button-primary:hover .button-icon { transform: translate(1px, -1px); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+}

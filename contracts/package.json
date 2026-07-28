@@ -1,0 +1,23 @@
+{
+  "name": "wraith-contracts",
+  "private": true,
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:sepolia": "hardhat run scripts/deploy.ts --network sepolia"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^6.1.0",
+    "@types/node": "^22.10.2",
+    "hardhat": "^2.22.17",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "@iexec-nox/nox-protocol-contracts": "^0.2.4",
+    "@nomicfoundation/edr-win32-x64-msvc": "^0.12.0-next.23",
+    "@openzeppelin/contracts": "^5.0.2",
+    "@uniswap/v3-periphery": "^1.4.4",
+    "dotenv": "^16.4.7"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "wraith",
+  "private": true,
+  "scripts": {
+    "build": "npm run build:contracts && npm run build:keeper && npm run build:web",
+    "build:contracts": "npm --prefix contracts run compile",
+    "build:keeper": "npm --prefix keeper run build",
+    "build:web": "npm --prefix web run build",
+    "test": "npm run test:contracts",
+    "test:contracts": "npm --prefix contracts test",
+    "dev:web": "npm --prefix web run dev",
+    "dev:keeper": "npm --prefix keeper run dev"
+  }
+}
+

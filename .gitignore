@@ -1,0 +1,26 @@
+node_modules/
+dist/
+out/
+.next/
+artifacts/
+cache/
+coverage/
+typechain-types/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+
+# Local instruction references requested to stay out of GitHub
+frontendskill.md
+design trends skill.md
+imagegen skill.md
+composition reccipes.md
+FRONTEND_SKILL.md
+DESIGN_TRENDS_SKILL.md
+IMAGEGEN_SKILL.md
+COMPOSITION_RECIPES.md
+
+# Local reference checkout
+wraith-contracts-reference/
+

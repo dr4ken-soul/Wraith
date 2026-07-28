@@ -1,0 +1,14 @@
+'use client'
+
+import {motion} from 'motion/react'
+import type {Address} from 'viem'
+
+type OrderTicketProps = {orderId: bigint; tokenIn: Address; tokenOut: Address; triggerAbove: boolean; status: string; createdAt: bigint; triggerPrice?: string; amountIn?: string; onCancel?: () => void; cancelPending?: boolean}
+
+/** Renders a chain-backed order in the same ticket language as the landing page. */
+export function OrderTicket({orderId, tokenIn, tokenOut, triggerAbove, status, createdAt, triggerPrice, amountIn, onCancel, cancelPending}: OrderTicketProps) {
+  const date = new Date(Number(createdAt) * 1000).toLocaleDateString('en-GB')
+  const shortToken = (value: Address) => `${value.slice(0, 6)}…${value.slice(-4)}`
+  return <motion.article className="double-bezel" initial={{opacity: 0, filter: 'blur(10px)', y: 20}} whileInView={{opacity: 1, filter: 'blur(0px)', y: 0}} viewport={{once: false, amount: 0.1}} transition={{duration: 0.7, ease: [0.16, 1, 0.3, 1]}}><div className="double-bezel-core p-5"><div className="flex items-center justify-between gap-4"><span className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--text-muted)]">ORDER #{orderId.toString()}</span><span className="rounded-full border border-[var(--border-default)] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.15em] text-[var(--accent)]">{status}</span></div><div className="mt-4 divide-y divide-[var(--border-subtle)]"><div className="flex justify-between gap-4 py-3"><span className="text-xs text-[var(--text-secondary)]">Pair</span><span className="font-mono text-xs text-[var(--text-primary)]">{shortToken(tokenIn)} → {shortToken(tokenOut)}</span></div><div className="flex justify-between gap-4 py-3"><span className="text-xs text-[var(--text-secondary)]">Direction</span><span className="font-mono text-xs text-[var(--text-primary)]">{triggerAbove ? 'Above trigger' : 'Below trigger'}</span></div><div className="flex justify-between gap-4 py-3"><span className="text-xs text-[var(--text-secondary)]">Trigger</span><span className="font-mono text-xs text-[var(--text-primary)]">{triggerPrice || 'Encrypted handle'}</span></div><div className="flex justify-between gap-4 py-3"><span className="text-xs text-[var(--text-secondary)]">Size</span><span className="font-mono text-xs text-[var(--text-primary)]">{amountIn || 'Encrypted handle'}</span></div></div><div className="mt-4 flex items-center justify-between gap-4 border-t border-[var(--border-subtle)] pt-4"><span className="font-mono text-[10px] text-[var(--text-muted)]">CREATED {date}</span>{status === 'open' && onCancel && <button type="button" disabled={cancelPending} onClick={onCancel} className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--error)] transition-colors hover:text-[var(--text-primary)]">Cancel order</button>}</div></div></motion.article>
+}
+
