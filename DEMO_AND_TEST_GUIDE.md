@@ -99,7 +99,7 @@ NEXT_PUBLIC_DEMO_POOL_ADDRESS=<live pool address>
 NEXT_PUBLIC_DEMO_POOL_FEE=<same fee used by the vault>
 ```
 
-The `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` template variable can remain empty for this build because the current connector uses the browser-injected wallet provider. MetaMask or another injected Sepolia wallet is required for the recording.
+Set `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` if you want the wallet modal to offer WalletConnect QR connections. MetaMask or another injected Sepolia wallet also works for the recording.
 
 Never commit any of these environment files. Only `.env.example` belongs in Git.
 
