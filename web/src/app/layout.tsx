@@ -6,8 +6,8 @@ export const metadata: Metadata = {
   title: 'Wraith · Invisible limit orders',
   description: 'Private Uniswap V3 limit orders powered by iExec Nox on Ethereum Sepolia',
   icons: {
-    icon: '/wraith-mark.png',
-    apple: '/wraith-mark.png',
+    icon: [{url: '/favicon.png', sizes: '512x512', type: 'image/png'}],
+    apple: [{url: '/favicon.png', sizes: '512x512', type: 'image/png'}],
   },
 }
 

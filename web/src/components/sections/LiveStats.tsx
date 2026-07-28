@@ -13,9 +13,9 @@ function Metric({value, label, suffix = ''}: {value?: string; label: string; suf
 /** Reads filled count and routed volume directly from WraithVault. */
 export function LiveStats() {
   const vaultAddress = getVaultAddress()
-  const filled = useReadContract({address: vaultAddress, abi: vaultAbi, functionName: 'totalOrdersFilled', query: {enabled: Boolean(vaultAddress)}})
-  const volume = useReadContract({address: vaultAddress, abi: vaultAbi, functionName: 'totalVolumeRouted', query: {enabled: Boolean(vaultAddress)}})
+  const liveQuery = {enabled: Boolean(vaultAddress), refetchInterval: 15_000, refetchOnWindowFocus: true}
+  const filled = useReadContract({address: vaultAddress, abi: vaultAbi, functionName: 'totalOrdersFilled', query: liveQuery})
+  const volume = useReadContract({address: vaultAddress, abi: vaultAbi, functionName: 'totalVolumeRouted', query: liveQuery})
   const volumeValue = typeof volume.data === 'bigint' ? formatUnits(volume.data, 6) : undefined
   return <section data-density="dense" className="relative z-10 overflow-hidden bg-[rgba(8,9,11,0.9)] py-24 backdrop-blur-sm md:py-32" aria-labelledby="stats-title"><div className="relative z-10 px-6 md:px-16"><h2 id="stats-title" className="mb-16 text-center font-mono text-xs uppercase tracking-[0.2em] text-[var(--text-muted)]">LIVE ON ETH SEPOLIA</h2><div className="grid grid-cols-1 gap-10 text-center md:grid-cols-3 md:gap-12"><Metric value={typeof filled.data === 'bigint' ? filled.data.toString() : undefined} label="ORDERS FILLED PRIVATELY" /><Metric value={volumeValue} label="VOLUME ROUTED THROUGH NOX" suffix={volumeValue ? ' USDC' : ''} /><Metric value="0" label="MEMPOOL EXPOSURE" suffix="%" /></div></div></section>
 }
-
