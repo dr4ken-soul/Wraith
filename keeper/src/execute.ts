@@ -19,6 +19,31 @@ async function waitForAmount(handleClient: HandleClient, amountHandle: `0x${stri
   throw new Error('amount decryption did not complete')
 }
 
+/** Waits for the public amount and settles a triggered swap. */
+export async function executeTriggered(
+  orderId: bigint,
+  amountHandle: `0x${string}`,
+  publicClient: PublicClient,
+  walletClient: WalletClient,
+  vaultAddress: Address,
+): Promise<{markHash: Hash; executeHash: Hash; amount: bigint}> {
+  const account = walletClient.account
+  if (!account) throw new Error('keeper wallet client has no account')
+  const handleClient = await createViemHandleClient(walletClient)
+  const amount = await waitForAmount(handleClient, amountHandle)
+  const executeHash = await walletClient.writeContract({
+    account,
+    chain: sepolia,
+    address: vaultAddress,
+    abi: vaultAbi,
+    functionName: 'executeOrder',
+    args: [orderId, amount],
+  })
+  await publicClient.waitForTransactionReceipt({hash: executeHash})
+  console.log(`order ${orderId.toString()} executed amount ${amount.toString()} tx ${executeHash}`)
+  return {markHash: executeHash, executeHash, amount}
+}
+
 /** Marks a true evaluation, waits for the amount, and settles the swap. */
 export async function triggerAndExecute(
   orderId: bigint,
@@ -28,8 +53,6 @@ export async function triggerAndExecute(
 ): Promise<{markHash: Hash; executeHash: Hash; amount: bigint}> {
   const account = walletClient.account
   if (!account) throw new Error('keeper wallet client has no account')
-  const handleClient = await createViemHandleClient(walletClient)
-
   const markHash = await walletClient.writeContract({
     account,
     chain: sepolia,
@@ -42,17 +65,6 @@ export async function triggerAndExecute(
   const logs = parseEventLogs({abi: vaultAbi, logs: markReceipt.logs, eventName: 'OrderTriggered'})
   const amountHandle = logs.find((log) => log.args.orderId === orderId)?.args.amountHandle
   if (!amountHandle) throw new Error(`amount handle missing for order ${orderId}`)
-
-  const amount = await waitForAmount(handleClient, amountHandle)
-  const executeHash = await walletClient.writeContract({
-    account,
-    chain: sepolia,
-    address: vaultAddress,
-    abi: vaultAbi,
-    functionName: 'executeOrder',
-    args: [orderId, amount],
-  })
-  await publicClient.waitForTransactionReceipt({hash: executeHash})
-  console.log(`order ${orderId.toString()} executed amount ${amount.toString()} tx ${executeHash}`)
-  return {markHash, executeHash, amount}
+  const settled = await executeTriggered(orderId, amountHandle, publicClient, walletClient, vaultAddress)
+  return {...settled, markHash}
 }

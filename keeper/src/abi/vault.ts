@@ -1,6 +1,24 @@
 export const vaultAbi = [
   {
     type: 'function',
+    name: 'nextOrderId',
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{name: '', type: 'uint256'}],
+  },
+  {
+    type: 'function',
+    name: 'getOrder',
+    stateMutability: 'view',
+    inputs: [{name: 'orderId', type: 'uint256'}],
+    outputs: [{name: 'result', type: 'tuple', components: [
+      {name: 'owner', type: 'address'}, {name: 'tokenIn', type: 'address'}, {name: 'tokenOut', type: 'address'},
+      {name: 'triggerAbove', type: 'bool'}, {name: 'triggerPrice', type: 'bytes32'}, {name: 'amountIn', type: 'bytes32'},
+      {name: 'pendingResult', type: 'bytes32'}, {name: 'status', type: 'uint8'}, {name: 'createdAt', type: 'uint256'},
+    ]}],
+  },
+  {
+    type: 'function',
     name: 'getOpenOrderIds',
     stateMutability: 'view',
     inputs: [],
@@ -44,4 +62,3 @@ export const vaultAbi = [
     ],
   },
 ] as const
-
