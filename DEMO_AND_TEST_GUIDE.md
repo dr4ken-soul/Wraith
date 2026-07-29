@@ -26,6 +26,7 @@ Do not go straight to recording. Run the automated checks first, then run the li
 - [x] Fill the required environment values.
 - [x] Deploy and verify `WraithVault` on Sepolia.
 - [x] Approve the input token for the vault.
+- [x] Add wallet-gated routing, connected-wallet details, copy/explorer actions, and disconnect navigation.
 - [ ] Pass one complete live order from encryption to `EXECUTED`.
 - [ ] Record the final demo.
 
@@ -433,18 +434,21 @@ Open `http://localhost:3000` and switch the browser wallet to Sepolia.
 
 1. Open the landing page and confirm the Wraith field renders without blocking the page.
 2. Click the wallet pill and connect the trader wallet.
-3. Open `/app` and confirm the dashboard reads the vault.
-4. Open `Place an order`.
-5. Enter the two token addresses, the prepared trigger value, and a small approved input amount.
-6. Select the trigger direction that is already satisfied by the current pool price.
-7. Click `Encrypt and submit`.
-8. Complete the Nox encryption/signing flow in the wallet.
-9. Wait for the transaction to confirm.
-10. Return to the dashboard and confirm the order ticket appears.
-11. Watch the keeper terminal. It should request an evaluation, receive the public boolean result, mark the order triggered, decrypt only the amount, and submit execution.
-12. Wait for the execution transaction to confirm.
-13. Refresh the dashboard. The ticket should read `EXECUTED`.
-14. Check the trader wallet's output-token balance and the `totalOrdersFilled` value on the landing page.
+3. Confirm the browser automatically navigates to `/app` after connection.
+4. Click the connected address pill and confirm the wallet menu shows the address, Sepolia, Active status, Copy, Explorer, and Disconnect controls.
+5. Close the menu with an outside click or Escape, reopen it, and click Disconnect. Confirm immediate navigation to `/`.
+6. Reconnect, open `/app`, and confirm the dashboard reads the vault.
+7. Open `Place an order`.
+8. Enter the two token addresses, the prepared trigger value, and a small approved input amount.
+9. Select the trigger direction that is already satisfied by the current pool price.
+10. Click `Encrypt and submit`.
+11. Complete the Nox encryption/signing flow in the wallet.
+12. Wait for the transaction to confirm.
+13. Return to the dashboard and confirm the order ticket appears.
+14. Watch the keeper terminal or manually run the GitHub Actions keeper cycle. It should request an evaluation, receive the public boolean result, mark the order triggered, decrypt only the amount, and submit execution.
+15. Wait for the execution transaction to confirm.
+16. Refresh the dashboard. The ticket should read `EXECUTED`.
+17. Check the trader wallet's output-token balance and the `totalOrdersFilled` value on the landing page.
 
 The test is a pass only if the actual output token arrives in the trader wallet. A successful order submission alone is not an end-to-end pass.
 
