@@ -165,6 +165,49 @@ DRAWER PANEL:
 
 ---
 
+## 2.1 Wallet-Gated Routing and App-Interior Wallet Menu (Mandatory)
+
+Wraith uses a wallet-connected app interior, so the wallet interaction contract is explicit:
+
+```
+CONNECTION FLOW:
+  Landing-page Connect Wallet buttons open the contained connection modal.
+  The modal owns connecting, pending, success and retryable error states.
+  A newly connected wallet navigates to /app after the provider confirms success.
+  Initial persisted wallet hydration does not force a redirect or flash the landing page.
+
+APP ROUTE GATE:
+  /app and all nested routes render only while isConnected is true.
+  During isReconnecting / isConnecting, render the branded loading skeleton.
+  After confirmed disconnection, immediately navigate to / and show the landing page.
+  Direct /app deep links without a wallet return to the landing page, never a host 404.
+
+CONNECTED WALLET PILL (app interior only):
+  Fixed top-right trigger with a green live-status dot, truncated 0x address, and chevron.
+  aria-expanded and aria-haspopup="menu" are required.
+  Clicking the trigger opens/closes the menu; it must never disconnect immediately.
+
+WALLET MENU:
+  Glass panel anchored below the pill with a fast scale 0.95 -> 1 and y -6 -> 0 transition,
+  transform origin top right, duration 0.18s.
+  Status header: "WALLET CONNECTED" with a green dot.
+  Full address, Sepolia network, Active status, Copy address, Sepolia Etherscan link,
+  and a visually distinct "DISCONNECT WALLET" action.
+  Copy changes to a check / "Copied" state and resets after 1.8s.
+  Close on outside pointer interaction and Escape. No backdrop div.
+  Disconnect navigates to / immediately, then revokes the provider connection.
+```
+
+Acceptance checks required before demo:
+
+- Connect from the landing page and confirm automatic navigation to `/app`.
+- Refresh `/app` while connected and confirm the app remains on the requested route.
+- Open the connected wallet pill and confirm the menu, copy action, explorer link and disconnect action.
+- Disconnect from the menu and confirm immediate navigation to `/`.
+- Open `/app` in a fresh disconnected session and confirm the branded landing page appears.
+
+---
+
 ## 3. Section: Hero
 
 **Recipe:** `split-screen-hero` (from COMPOSITION_RECIPES.md), adapted.
@@ -566,3 +609,4 @@ No photography or video assets in this spec. The only generated element is the W
 - [x] Every positional or sizing class has responsive breakpoints
 - [x] Composition recipes referenced by name where a match existed, bespoke specs written at matching detail where none did
 - [x] No placeholder copy, every headline, subhead, label and card value is final text
+- [x] Wallet connection, hydration, protected routing, redirect, dropdown, disconnect and acceptance behavior is explicitly specified
