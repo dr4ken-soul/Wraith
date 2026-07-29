@@ -16,8 +16,8 @@ export default function DashboardPage() {
   const {address} = useAccount()
   const {data: walletClient} = useWalletClient()
   const vaultAddress = getVaultAddress()
-  const ordersRead = useReadContract({address: vaultAddress, abi: vaultAbi, functionName: 'getMyOrders', query: {enabled: Boolean(vaultAddress && address)}})
-  const idsRead = useReadContract({address: vaultAddress, abi: vaultAbi, functionName: 'getMyOrderIds', query: {enabled: Boolean(vaultAddress && address)}})
+  const ordersRead = useReadContract({address: vaultAddress, abi: vaultAbi, functionName: 'getMyOrders', account: address, query: {enabled: Boolean(vaultAddress && address)}})
+  const idsRead = useReadContract({address: vaultAddress, abi: vaultAbi, functionName: 'getMyOrderIds', account: address, query: {enabled: Boolean(vaultAddress && address)}})
   const {writeContractAsync, isPending: cancelPending} = useWriteContract()
   const [decrypted, setDecrypted] = useState<Record<string, Decrypted>>({})
 

@@ -40,6 +40,8 @@ When another unchecked item is completed, update this list and keep the transact
 - On-chain constructor reads match the configured keeper, router, and `3000` pool fee.
 - The frontend production build passes with `.env.local` containing the deployed vault and selected pool configuration.
 - Trader approval passed: Sepolia WETH approval transaction `0x46e75ca6cf1f11f2580b6b2087a177fa4f6f755d2e8e5f7965d3069663f04591` approved `0.001 WETH` for the Wraith vault.
+- Live order submission passed: `0x4c26a413dabda3d3ae474475bb92bc865af8bb18a081760c55e368ad60fc04fa` successfully called `submitOrder` from the trader wallet to the deployed vault.
+- Dashboard read and refresh routing fixes are now required before judging the live order state: owner-scoped reads must pass the connected wallet as the RPC caller, and persisted wallet hydration must preserve `/app` deep links.
 
 The Hardhat telemetry question is not a build failure. Answering `y` or `n` only changes Hardhat's local telemetry preference.
 

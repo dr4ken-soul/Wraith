@@ -1,6 +1,6 @@
 'use client'
 
-import {useEffect, type ReactNode} from 'react'
+import {useEffect, useState, type ReactNode} from 'react'
 import {useAccount} from 'wagmi'
 import {usePathname, useRouter} from 'next/navigation'
 
@@ -10,12 +10,19 @@ export function ProtectedRoute({children}: {children: ReactNode}) {
   const router = useRouter()
   const pathname = usePathname()
   const hydrating = isReconnecting || isConnecting
+  const [hydrationSettled, setHydrationSettled] = useState(false)
+
+  /** Gives persisted wagmi state time to hydrate before making a route decision. */
+  useEffect(() => {
+    setHydrationSettled(false)
+    const timer = window.setTimeout(() => setHydrationSettled(true), 750)
+    return () => window.clearTimeout(timer)
+  }, [hydrating])
 
   useEffect(() => {
-    if (!hydrating && !isConnected) router.replace(`/?returnTo=${encodeURIComponent(pathname)}`)
-  }, [hydrating, isConnected, pathname, router])
+    if (hydrationSettled && !hydrating && !isConnected) router.replace(`/?returnTo=${encodeURIComponent(pathname)}`)
+  }, [hydrationSettled, hydrating, isConnected, pathname, router])
 
-  if (hydrating) return <div className="relative z-10 flex min-h-[100dvh] items-center justify-center"><div className="skeleton h-24 w-64" /></div>
-  if (!isConnected) return <div className="relative z-10 flex min-h-[100dvh] items-center justify-center"><div className="skeleton h-24 w-64" /></div>
+  if (hydrating || !hydrationSettled || !isConnected) return <div className="relative z-10 flex min-h-[100dvh] items-center justify-center"><div className="skeleton h-24 w-64" /></div>
   return <>{children}</>
 }
