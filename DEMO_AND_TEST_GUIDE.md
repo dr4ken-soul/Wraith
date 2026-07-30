@@ -27,7 +27,7 @@ Do not go straight to recording. Run the automated checks first, then run the li
 - [x] Deploy and verify `WraithVault` on Sepolia.
 - [x] Approve the input token for the vault.
 - [x] Add wallet-gated routing, connected-wallet details, copy/explorer actions, and disconnect navigation.
-- [ ] Pass one complete live order from encryption to `EXECUTED`.
+- [x] Pass one complete live order from encryption to `EXECUTED`.
 - [ ] Record the final demo.
 
 When another unchecked item is completed, update this list and keep the transaction hash or deployment address beside your private notes. Do not put private keys in this file.
@@ -41,6 +41,7 @@ When another unchecked item is completed, update this list and keep the transact
 - The frontend production build passes with `.env.local` containing the deployed vault and selected pool configuration.
 - Trader approval passed: Sepolia WETH approval transaction `0x46e75ca6cf1f11f2580b6b2087a177fa4f6f755d2e8e5f7965d3069663f04591` approved `0.001 WETH` for the Wraith vault.
 - Live order submission passed: `0x4c26a413dabda3d3ae474475bb92bc865af8bb18a081760c55e368ad60fc04fa` successfully called `submitOrder` from the trader wallet to the deployed vault.
+- Live end-to-end smoke test passed: a `0.0001 WETH` order with trigger `36.000000` was evaluated by the GitHub Actions keeper, the keeper logged `order 1 executed`, and the dashboard displayed `EXECUTED`.
 - Dashboard read and refresh routing fixes are now required before judging the live order state: owner-scoped reads must pass the connected wallet as the RPC caller, and persisted wallet hydration must preserve `/app` deep links.
 
 The Hardhat telemetry question is not a build failure. Answering `y` or `n` only changes Hardhat's local telemetry preference.
