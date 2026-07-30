@@ -4,7 +4,7 @@ pragma solidity ^0.8.27;
 import {Nox, ebool, euint256, externalEuint256} from '@iexec-nox/nox-protocol-contracts/contracts/sdk/Nox.sol';
 import {IERC20} from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import {SafeERC20} from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
-import {ISwapRouter} from '@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol';
+import {ISwapRouter02} from './interfaces/ISwapRouter02.sol';
 
 /// @title WraithVault
 /// @notice Stores encrypted Uniswap V3 limit orders and settles them without
@@ -34,7 +34,7 @@ contract WraithVault {
     }
 
     /// @notice The Uniswap V3 router used for settlement.
-    ISwapRouter public immutable swapRouter;
+    ISwapRouter02 public immutable swapRouter;
 
     /// @notice The only account allowed to drive evaluation and settlement.
     address public immutable keeper;
@@ -81,7 +81,7 @@ contract WraithVault {
     constructor(address router, address keeperAddress, uint24 fee) {
         require(router != address(0), 'router is zero');
         require(keeperAddress != address(0), 'keeper is zero');
-        swapRouter = ISwapRouter(router);
+        swapRouter = ISwapRouter02(router);
         keeper = keeperAddress;
         poolFee = fee;
     }
@@ -230,12 +230,11 @@ contract WraithVault {
         IERC20(order.tokenIn).forceApprove(address(swapRouter), revealedAmountIn);
 
         uint256 amountOut = swapRouter.exactInputSingle(
-            ISwapRouter.ExactInputSingleParams({
+            ISwapRouter02.ExactInputSingleParams({
                 tokenIn: order.tokenIn,
                 tokenOut: order.tokenOut,
                 fee: poolFee,
                 recipient: order.owner,
-                deadline: block.timestamp,
                 amountIn: revealedAmountIn,
                 amountOutMinimum: 0,
                 sqrtPriceLimitX96: 0

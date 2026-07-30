@@ -36,7 +36,7 @@ When another unchecked item is completed, update this list and keep the transact
 
 - `npm run build`: passed. Hardhat printed a Solidity 0.8.35 support warning, then reported `Nothing to compile`; keeper TypeScript passed; Next.js compiled, type-checked, generated all 6 pages, and finalised the build.
 - `npm test`: passed with `2 passing` Hardhat tests.
-- `WraithVault` deployed and verified on Sepolia at `0xD684421deCfd9d082D785e83a316B5CEff33AdAd`.
+- `WraithVault` deployed and verified on Sepolia at `0x64C0c2B78bf385F11b12A1172E326a97D7e7FFf8`.
 - On-chain constructor reads match the configured keeper, router, and `3000` pool fee.
 - The frontend production build passes with `.env.local` containing the deployed vault and selected pool configuration.
 - Trader approval passed: Sepolia WETH approval transaction `0x46e75ca6cf1f11f2580b6b2087a177fa4f6f755d2e8e5f7965d3069663f04591` approved `0.001 WETH` for the Wraith vault.
@@ -221,10 +221,10 @@ Before deployment, the vault address was deliberately blank. The deployment has 
 The vault is now deployed and verified at:
 
 ```text
-0xD684421deCfd9d082D785e83a316B5CEff33AdAd
+0x64C0c2B78bf385F11b12A1172E326a97D7e7FFf8
 ```
 
-Explorer: <https://sepolia.etherscan.io/address/0xD684421deCfd9d082D785e83a316B5CEff33AdAd#code>
+Explorer: <https://sepolia.etherscan.io/address/0x64C0c2B78bf385F11b12A1172E326a97D7e7FFf8#code>
 
 ### Why the files are separate
 
