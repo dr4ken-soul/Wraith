@@ -24,12 +24,34 @@ export default function DashboardPage() {
   useEffect(() => {
     let active = true
     async function decryptOrders(): Promise<void> {
-      if (!walletClient || !ordersRead.data) return
-      const client = await createViemHandleClient(walletClient)
+      if (!walletClient || !ordersRead.data || !vaultAddress || !address) return
+      const cachePrefix = `wraith:decrypted:${vaultAddress.toLowerCase()}:${address?.toLowerCase()}`
+      const cached = new Map<string, Decrypted>()
+      const missing = new Set<string>()
+      for (const order of ordersRead.data as unknown as RawOrder[]) {
+        const key = `${cachePrefix}:${order.triggerPrice}:${order.amountIn}`
+        const raw = sessionStorage.getItem(key)
+        if (raw) {
+          try {
+            cached.set(key, JSON.parse(raw) as Decrypted)
+            continue
+          } catch {
+            sessionStorage.removeItem(key)
+          }
+        }
+        missing.add(key)
+      }
+      const client = missing.size > 0 ? await createViemHandleClient(walletClient) : null
       const values = await Promise.all((ordersRead.data as unknown as RawOrder[]).map(async (order, index) => {
+        const key = `${cachePrefix}:${order.triggerPrice}:${order.amountIn}`
+        const existing = cached.get(key)
+        if (existing) return [String(index), existing] as const
         try {
+          if (!client) return [String(index), {}] as const
           const [price, amount] = await Promise.all([client.decrypt(order.triggerPrice), client.decrypt(order.amountIn)])
-          return [String(index), {triggerPrice: String(price.value), amountIn: formatUnits(BigInt(amount.value as unknown as string), 18)}] as const
+          const result = {triggerPrice: String(price.value), amountIn: formatUnits(BigInt(amount.value as unknown as string), 18)}
+          sessionStorage.setItem(key, JSON.stringify(result))
+          return [String(index), result] as const
         } catch {
           return [String(index), {}] as const
         }
