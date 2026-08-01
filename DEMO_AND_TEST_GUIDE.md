@@ -311,7 +311,7 @@ For an immediate trigger:
 
 This demonstrates the complete confidential evaluation and execution flow without trying to move a public testnet market during the recording.
 
-At the time of the latest local check, the selected pool returned a raw keeper price of `45734918`, which corresponds to a form trigger value of approximately `45.734918`. Re-read `slot0()` immediately before submitting because testnet prices can change. For an immediate `Price rises to` trigger, use a slightly lower value such as `45.000000`; for an immediate `Price falls to` trigger, use a slightly higher value such as `46.000000`.
+At the latest Sepolia check on 2026-08-01, the selected pool returned a raw keeper price of `40130501`, which corresponds to a form trigger value of approximately `40.130501`. Re-read `slot0()` immediately before submitting because testnet prices can change. For this recording, use `35.000000` with `Price rises to`; this is safely below the checked live price and should trigger immediately. `36.000000` is also currently satisfied because `40.130501 >= 36.000000`, but `35.000000` gives a little more margin if the testnet price moves before the keeper runs.
 
 ## 7. Deploy the frontend to Vercel
 
